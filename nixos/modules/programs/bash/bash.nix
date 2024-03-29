@@ -42,6 +42,8 @@ in
       };
       */
 
+      package = mkPackageOption pkgs "bashInteractive" { };
+
       shellAliases = mkOption {
         default = {};
         description = lib.mdDoc ''
@@ -198,7 +200,7 @@ in
     # priority to allow user override using both .text and .source.
     environment.etc.inputrc.source = mkOptionDefault ./inputrc;
 
-    users.defaultUserShell = mkDefault pkgs.bashInteractive;
+    users.defaultUserShell = mkDefault cfg.package;
 
     environment.pathsToLink = optionals cfg.enableCompletion [
       "/etc/bash_completion.d"
@@ -208,8 +210,8 @@ in
     environment.shells =
       [ "/run/current-system/sw/bin/bash"
         "/run/current-system/sw/bin/sh"
-        "${pkgs.bashInteractive}/bin/bash"
-        "${pkgs.bashInteractive}/bin/sh"
+        "${cfg.package}/bin/bash"
+        "${cfg.package}/bin/sh"
       ];
 
   };

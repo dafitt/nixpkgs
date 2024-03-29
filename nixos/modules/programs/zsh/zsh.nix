@@ -53,6 +53,8 @@ in
         type = types.bool;
       };
 
+      package = mkPackageOption pkgs "zsh" { };
+
       shellAliases = mkOption {
         default = { };
         description = lib.mdDoc ''
@@ -188,7 +190,7 @@ in
             . ${config.system.build.setEnvironment}
         fi
 
-        HELPDIR="${pkgs.zsh}/share/zsh/$ZSH_VERSION/help"
+        HELPDIR="${cfg.package}/share/zsh/$ZSH_VERSION/help"
 
         # Tell zsh how to find installed completions.
         for p in ''${(z)NIX_PROFILES}; do
@@ -301,7 +303,7 @@ in
     # see https://github.com/NixOS/nixpkgs/issues/132732
     environment.etc.zinputrc.text = builtins.readFile ./zinputrc;
 
-    environment.systemPackages = [ pkgs.zsh ]
+    environment.systemPackages = [ cfg.package ]
       ++ optional cfg.enableCompletion pkgs.nix-zsh-completions;
 
     environment.pathsToLink = optional cfg.enableCompletion "/share/zsh";
@@ -311,7 +313,7 @@ in
     environment.shells =
       [
         "/run/current-system/sw/bin/zsh"
-        "${pkgs.zsh}/bin/zsh"
+        "${cfg.package}/bin/zsh"
       ];
 
   };
